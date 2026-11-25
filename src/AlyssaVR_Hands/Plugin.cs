@@ -18,7 +18,7 @@ using UnityEngine.SceneManagement;
 
 namespace AlyssaVRHands
 {
-    [BepInPlugin("alyssa.vr.hands", "ALYSSA VR Hands", "0.8.0")]
+    [BepInPlugin("alyssa.vr.hands", "ALYSSA VR Hands", "0.8.1")]
     public class Plugin : BaseUnityPlugin
     {
         internal static Plugin Instance;
@@ -131,8 +131,9 @@ namespace AlyssaVRHands
             FlatCam.Init();
             Harmony h = new Harmony("alyssa.vr.hands");
             Patches.Apply(h);
+            LegacyKeys.Apply(h);
             try { cfgTime = System.IO.File.GetLastWriteTimeUtc(Config.ConfigFilePath); } catch (Exception) { }
-            Logger.LogInfo("ALYSSA VR Hands 0.8.0 loaded (aim hand " + CfgHand.Value + ", items in " + CfgAttachHand.Value + ")");
+            Logger.LogInfo("ALYSSA VR Hands 0.8.1 loaded (aim hand " + CfgHand.Value + ", items in " + CfgAttachHand.Value + ")");
         }
 
         // Re-read the config file when it is edited while the game runs.

@@ -28,6 +28,8 @@ namespace AlyssaVRHands
             if (!Find()) return;
             CharacterController cc = HeadCollision.Controller;
             if (cc == null || !cc.enabled || !cc.gameObject.activeInHierarchy) return;
+            // the game itself moves the player while the character is switched off (ladders, scripted moves)
+            if (HeadCollision.Player == null || !HeadCollision.Player.enabled) return;
             if (Time.timeScale <= 0f || !InPlay()) return;
             if (head.localPosition.sqrMagnitude < 1e-6f) return; // headset not tracked
 

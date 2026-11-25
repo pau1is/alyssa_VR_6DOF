@@ -13,6 +13,7 @@ namespace AlyssaVRHands
         private static Character player;
         private static CharacterController cc;
         internal static CharacterController Controller { get { return player != null ? cc : null; } }
+        internal static Character Player { get { return player; } }
         private static float nextFind;
         private static Transform head;
         private static readonly List<Transform> roots = new List<Transform>();
@@ -45,7 +46,7 @@ namespace AlyssaVRHands
             Restore();
             if (Time.unscaledTime < nextFind) return;
             nextFind = Time.unscaledTime + 2f;
-            if (player == null || !player.isActiveAndEnabled)
+            if (player == null || !player.gameObject.activeInHierarchy)
             {
                 player = null;
                 cc = null;
