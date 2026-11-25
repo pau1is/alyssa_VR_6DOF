@@ -18,7 +18,7 @@ using UnityEngine.SceneManagement;
 
 namespace AlyssaVRHands
 {
-    [BepInPlugin("alyssa.vr.hands", "ALYSSA VR Hands", "0.7.4")]
+    [BepInPlugin("alyssa.vr.hands", "ALYSSA VR Hands", "0.8.0")]
     public class Plugin : BaseUnityPlugin
     {
         internal static Plugin Instance;
@@ -44,6 +44,9 @@ namespace AlyssaVRHands
         internal static ConfigEntry<bool> CfgHeadCollision;
         internal static ConfigEntry<float> CfgHeadRadius;
         internal static ConfigEntry<string> CfgShiftRoots;
+        internal static ConfigEntry<bool> CfgRoomScale;
+        internal static ConfigEntry<float> CfgRoomScaleDeadzone;
+        internal static ConfigEntry<float> CfgRoomScaleMaxSpeed;
         internal static ConfigEntry<bool> CfgNoVsync;
         internal static ConfigEntry<bool> CfgNoHeadBob;
         internal static ConfigEntry<bool> CfgFrameStats;
@@ -108,6 +111,12 @@ namespace AlyssaVRHands
                 "Head size (metres) for the wall check. Bigger = stops further from walls.");
             CfgShiftRoots = Config.Bind("Head", "MovedObjects", "VR_Root,VR_UIPanel,VR_PointAim",
                 "ALYSSA VR objects moved together with the view when the head is pushed back.");
+            CfgRoomScale = Config.Bind("RoomScale", "BodyFollowsHead", true,
+                "Walking in your room moves the character (walls stop it). Without it the view drifts away from the character's body, which then gets stuck on walls you don't see.");
+            CfgRoomScaleDeadzone = Config.Bind("RoomScale", "Deadzone", 0f,
+                "How far (metres) the head may move away from the body before the body follows. 0 = always exactly under the head.");
+            CfgRoomScaleMaxSpeed = Config.Bind("RoomScale", "MaxSpeed", 3f,
+                "Fastest the body catches up with the head (metres per second).");
             CfgNoVsync = Config.Bind("Smoothness", "DisableVSync", true,
                 "Turn the desktop VSync off in VR (the monitor's refresh rate fights the headset's and makes the view judder).");
             CfgNoHeadBob = Config.Bind("Smoothness", "DisableHeadBobbing", true,
@@ -123,7 +132,7 @@ namespace AlyssaVRHands
             Harmony h = new Harmony("alyssa.vr.hands");
             Patches.Apply(h);
             try { cfgTime = System.IO.File.GetLastWriteTimeUtc(Config.ConfigFilePath); } catch (Exception) { }
-            Logger.LogInfo("ALYSSA VR Hands 0.7.4 loaded (aim hand " + CfgHand.Value + ", items in " + CfgAttachHand.Value + ")");
+            Logger.LogInfo("ALYSSA VR Hands 0.8.0 loaded (aim hand " + CfgHand.Value + ", items in " + CfgAttachHand.Value + ")");
         }
 
         // Re-read the config file when it is edited while the game runs.
@@ -181,6 +190,8 @@ namespace AlyssaVRHands
 
         private void LateUpdate()
         {
+            try { RoomScale.LateUpdate(); }
+            catch (Exception e) { Logger.LogError("Room scale: " + e.Message); }
             try { Attach.LateUpdate(); }
             catch (Exception e) { Logger.LogError("Attach: " + e); }
             try { HideUI.LateUpdate(); }

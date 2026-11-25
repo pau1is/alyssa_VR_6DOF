@@ -5,6 +5,7 @@ They make the hands matter and the experience smoother:
 
 - **Aim with your right hand.** Doors, notes and items are chosen by what the right controller points at, not by where you look (both the game's own interaction ray and Game Creator 2's interaction system).
 - **The match in your hand.** The lit match (and the lighter) is held in your left controller, scaled to a sensible VR size, with the flame sitting on the match head. You can hold it up to walls and light up corners.
+- **Room-scale walking.** Walking in your room moves the character, walls stop it. (ALYSSA VR alone leaves the body behind, so after stepping around or snap turning the invisible body got stuck on walls you could not see.)
 - **No head through walls.** If you lean or step into a wall or door, the view stops at the wall instead of clipping through it.
 - **Clean HUD.** Hides the crosshair, the "[F] light / put out the match" hint and the match counter (configurable list).
 - **Film grain in VR.** `AlyssaVR_ScreenFX` copies the game's camera filters (TV noise / grain, posterize, LUT) onto the VR eyes, which ALYSSA VR otherwise loses.
@@ -37,6 +38,7 @@ Tested with ALYSSA VR 0.1.9, BepInEx 5.4.23, a Quest headset over Meta Horizon L
 | Point the **right** controller + **A** | interact with what you point at (the game shows its usual prompt) |
 | **B** (= F) | light / put out a match - it appears in your **left** hand |
 | Lean / walk into a wall | the view stops at the wall |
+| Walk in your room | the character walks with you |
 
 ## Settings
 
@@ -51,11 +53,14 @@ Tested with ALYSSA VR 0.1.9, BepInEx 5.4.23, a Quest headset over Meta Horizon L
 | Flame | `PutFlameOnMatchHead` / `FlameOffset` | `true` / `0,0,0` | flame placement fix / extra offset (m) |
 | UI | `Hide` | crosshair, match hint, match counter | HUD pieces to hide: path endings or `*name*` patterns |
 | Head | `StopAtWalls` / `HeadRadius` | `true` / `0.12` | head collision and head size (m) |
+| RoomScale | `BodyFollowsHead` / `Deadzone` / `MaxSpeed` | `true` / `0` / `3` | the body follows the headset / how far the head may lean away first (m; try 0.1 if leaning over a table drags you) / catch-up speed (m/s) |
 | Smoothness | `DisableVSync` / `LogFrameStats` | `true` / `true` | VSync off in VR / fps line in the log every 15 s |
 
 `BepInEx\config\alyssa.vr.screenfx.cfg`: `Enabled`, `NoiseStrength` (grain strength, 1 = like the game).
 
 ## Known limitations
+
+- A torch light on the left hand is ALYSSA VR's own flashlight: holding the left grip alone for 1.3 s switches it on. To make that impossible set `[Flashlight] On = false` and `HoldSeconds = 1000` in `alyssa.vr.cfg`.
 
 - The game's head bobbing is a Game Creator setting in most levels and is not turned off by this plugin.
 - Physics pick-up support (`[Pickup]`) is included, but ALYSSA has nothing to pick up that way.
@@ -82,6 +87,7 @@ Uses the .NET Framework 4 C# compiler that ships with Windows and references the
 
 - **Прицел правой рукой.** Двери, записки и предметы выбираются тем, на что указывает правый контроллер, а не взглядом.
 - **Спичка в руке.** Зажжённая спичка (и зажигалка) в левом контроллере, увеличена для VR, пламя на головке спички. Можно подносить к стенам и светить в углы.
+- **Ходьба по комнате.** Если физически ходить по комнате, персонаж идёт вместе с вами, стены его останавливают. (Без этого тело оставалось на месте, и после шагов или поворота стиком невидимое тело упиралось в стены, которых не видно.)
 - **Голова не проходит сквозь стены.** Если наклониться или шагнуть в стену, вид останавливается у стены.
 - **Чистый интерфейс.** Скрыты прицел, подсказка «[F] – зажечь/погасить спичку» и счётчик спичек (список настраивается).
 - **Зерно в VR.** `AlyssaVR_ScreenFX` возвращает фильтры камеры игры (шум, постеризация, LUT), которые ALYSSA VR теряет.

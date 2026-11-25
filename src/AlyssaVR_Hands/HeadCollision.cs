@@ -12,6 +12,7 @@ namespace AlyssaVRHands
     {
         private static Character player;
         private static CharacterController cc;
+        internal static CharacterController Controller { get { return player != null ? cc : null; } }
         private static float nextFind;
         private static Transform head;
         private static readonly List<Transform> roots = new List<Transform>();
